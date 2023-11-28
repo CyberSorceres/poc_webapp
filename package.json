@@ -10,7 +10,8 @@
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "serve": "webpack serve",
-    "coverage": "vitest --coverage"
+    "coverage": "vitest --coverage",
+    "prettier": "prettier --write --cache ."
   },
   "author": "CyberSorcerers <cybersorcerers23@gmail.com>",
   "license": "MIT",
