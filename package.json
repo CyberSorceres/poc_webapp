@@ -23,9 +23,13 @@
     "ts-loader": "^9.4.4",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6",
+    "vue-loader": "^17.3.1",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "workbox-webpack-plugin": "^7.0.0"
+  },
+  "dependencies": {
+    "vue": "^3.3.9"
   }
 }

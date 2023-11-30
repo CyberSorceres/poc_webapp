@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
+const { VueLoaderPlugin } = require("vue-loader");
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -17,13 +18,28 @@ const config = {
     new HtmlWebpackPlugin({
       template: "index.html",
     }),
+    new VueLoaderPlugin(),
   ],
   module: {
     rules: [
       {
         test: /\.(ts|tsx)$/i,
         loader: "ts-loader",
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        },
         exclude: ["/node_modules/"],
+      },
+      {
+        test: /\.vue/i,
+        use: {
+          loader: "vue-loader",
+          options: {
+            compilerOptions: {
+              isCustomElement: (tag) => tag === "center",
+            },
+          },
+        },
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
