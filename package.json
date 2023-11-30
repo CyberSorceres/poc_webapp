@@ -18,6 +18,7 @@
   "devDependencies": {
     "@vitest/coverage-istanbul": "^0.34.6",
     "@webpack-cli/generators": "^3.0.7",
+    "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
     "prettier": "^3.1.0",
     "ts-loader": "^9.4.4",
