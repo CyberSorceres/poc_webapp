@@ -1,38 +1,52 @@
 <script setup lang="ts">
- import { ref } from 'vue';
+ import { ref, watch } from 'vue';
  import { useCognito } from './composables/use_cognito';
-useCognito(ref('hello@gmail.com'), ref('12341738348$eeE2'));
-const msg = "Hello world!";
+ const username = ref('')
+ const password = ref('');
+ const confirmPassword = ref('');
+ 
+ const cognitoUsername = ref('');
+ const cognitoPassowrd = ref('');
+
+ const { user, error } = useCognito(cognitoUsername, cognitoPassowrd);
+ 
+ function submit() {
+     if (confirmPassword.value !== password.value) {
+	 error.value = 'Le password non combaciano';
+	 return;
+     }
+     cognitoUsername.value = username.value;
+     cognitoPassowrd.value = password.value;
+ }
+
+ watch(user, () => console.log(`User loggato! ${user}`))
 </script>
 <template>
       <div class="login-container">
-        <h2>Login</h2>
+          <h2>Registrati</h2>
+	  {{ error }}
         <form class="login form">
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" v-model.trim="username" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="passord" id="password" name="password" required>
+                <input type="passord" id="password" name="password" v-model.trim="password" required>
+            </div>
+	    <div class="form-group">
+                <label for="password">Conferma Password:</label>
+                <input type="passord" id="password" name="password" v-model.trim="confirmPassword" required>
             </div>
             <div class="form group">
-                <button type="submit">Accedi</button>
+                <button type="button" @click="submit">Registra</button>
             </div>
-        </form> 
+        </form>
     </div>
 </template>
 
 
 <style>
-body{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: antiquewhite;
-    margin: 0;
-    padding: 0;
-    align-items: center;
-    height: 100vh;
-}
 
 .login-container{
     background-color: beige;
