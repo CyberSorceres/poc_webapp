@@ -1,0 +1,22 @@
+:root {
+    --color-black: #000000;
+    --color-very-dark: #132847;
+    --color-dark: #1d3557;
+    --colr-medium-dark: #3b7295;
+    --color-medium: #457b9d;
+    --color-medium-light: #a1c7e0;
+    --color-light: #cfdee7;
+}
+
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(197, 121, 22);
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    height: 100vh;
+}
+h2{
+    text-align: center;
+    color: var(--color-medium);
+}
