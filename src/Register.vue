@@ -1,31 +1,32 @@
 <script setup lang="ts">
  import { ref, watch } from 'vue';
- import { useCognito } from './composables/use_cognito';
+import { CognitoAuthenticator, Authenticator } from './cognito';
  const username = ref('')
  const password = ref('');
  const confirmPassword = ref('');
- 
- const cognitoUsername = ref('');
- const cognitoPassowrd = ref('');
-
- const { user, error } = useCognito(cognitoUsername, cognitoPassowrd);
- 
- function submit() {
-     if (confirmPassword.value !== password.value) {
-	 error.value = 'Le password non combaciano';
-	 return;
+const {authenticator} = defineProps<{
+     authenticator: Authenticator,
+ }>();
+ const error = ref('');
+ async function submit() {
+     try {
+	 const user = await authenticator.register(username.value, password.value);
+	 console.log(user)
+     } catch (e) {
+	 debugger;
+	 if (e instanceof Error) {
+	     error.value = e.message;
+	 } else {
+	     throw e;
+	 }
      }
-     cognitoUsername.value = username.value;
-     cognitoPassowrd.value = password.value;
  }
-
- watch(user, () => console.log(`User loggato! ${user}`))
 </script>
 <template>
       <div class="login-container">
           <h2>Registrati</h2>
 	  {{ error }}
-        <form class="login form">
+          <form class="login form">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" v-model.trim="username" required>
@@ -39,7 +40,7 @@
                 <input type="passord" id="password" name="password" v-model.trim="confirmPassword" required>
             </div>
             <div class="form group">
-                <button type="button" @click="submit">Registra</button>
+                <button type="button" @click="submit">Registrati</button>
             </div>
         </form>
     </div>

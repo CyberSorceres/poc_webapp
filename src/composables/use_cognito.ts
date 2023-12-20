@@ -4,11 +4,7 @@ import { CognitoUserPool, CognitoUserAttribute, ISignUpResult } from 'amazon-cog
 
 
 export function useCognito(email: Ref<string>, password: Ref<string>) {
-    const poolData = {
-	UserPoolId: 'eu-north-1_3IXfYlKCt',
-	ClientId: '3dfitbij9sve1mirmk6bdriu83',
-    };
-    const userPool = new CognitoUserPool(poolData)
+
     const user: Ref<ISignUpResult> = ref(null);
     const error: Ref<string> = ref('')
     watchEffect(() => {

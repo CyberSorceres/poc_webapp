@@ -1,8 +1,24 @@
 <script setup lang="ts">
  import { ref } from 'vue';
- import { useCognito } from './composables/use_cognito';
-useCognito(ref('hello@gmail.com'), ref('12341738348$eeE2'));
-const msg = "Hello world!";
+import { Authenticator } from './cognito';
+const {authenticator} = defineProps<{
+     authenticator: Authenticator,
+ }>();
+ const email = ref('');
+ const password = ref('');
+ const error = ref('');
+
+ async function submit() {
+	 try {
+	     await authenticator.login(email.value, password.value)
+	 } catch (e) {
+	     if (e instanceof Error) {
+		 error.value = e.message;
+	     } else {
+		 throw e;
+	     }
+	 }
+ }
 </script>
 <template>
       <div class="login-container">
@@ -17,7 +33,7 @@ const msg = "Hello world!";
                 <input type="passord" id="password" name="password" required>
             </div>
             <div class="form group">
-                <button type="submit">Accedi</button>
+                <button type="submit" @click="submit()">Accedi</button>
             </div>
         </form> 
     </div>
