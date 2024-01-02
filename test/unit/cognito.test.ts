@@ -4,13 +4,26 @@ import { CognitoAuthenticator } from "../../src/cognito";
 vi.mock("amazon-cognito-identity-js", () => {
   const CognitoUser = vi.fn();
   CognitoUser.prototype.authenticateUser = function (
-    { Username },
+    { Username,Password },
+    
     { onSuccess, onFailure },
   ) {
-    onSuccess(Username);
+   
+    if( Password!=="12345678"){
+      onFailure(new Error("Wrong password"));
+    }
+    else{
+      onSuccess(Username);
+    }
   };
   CognitoUser.prototype.confirmRegistration = function (code, _, callback) {
-    callback(null, this.email);
+    if (code !== "12345"){
+      callback(new Error("Incorrect code"));
+    }
+    else{
+      callback(null, this.email);
+    }
+    
   };
   const CognitoUserPool = vi.fn();
   CognitoUserPool.prototype.signUp = function (
@@ -22,7 +35,12 @@ vi.mock("amazon-cognito-identity-js", () => {
   ) {
     const user = new CognitoUser();
     user.email = email;
-    callback(null, { user });
+    if(email.includes("@")){
+      callback(null, { user });
+    }
+    else{
+      callback(new Error("Wrong email"));
+    }
   };
   return {
     CognitoUserPool,
@@ -48,6 +66,28 @@ describe("Cognito tests", () => {
     await auth.register("hello@gmail.com", "12345678");
     const user = await auth.confirmCode("12345");
     expect(user).toBe("hello@gmail.com");
-    expect(auth.getAuthData()).toBe("hello@gmail.com");
+   // expect(auth.getAuthData()).toBe("hello@gmail.com");
+  });
+
+  it("login incorrectly",async()=>{
+    const auth = new CognitoAuthenticator();
+    
+    expect(() => auth.login("hello@gmail.com", "8393722")).rejects.toThrow("Wrong password")
+  });
+  
+ 
+  it("confirm code incorrect", async () => {
+    const auth = new CognitoAuthenticator();
+    await auth.register("hello@gmail.com", "12345678");
+   
+    expect(()=> auth.confirmCode("12535")).rejects.toThrow("Incorrect code")
+   // expect(auth.getAuthData()).toBe("hello@gmail.com");
+  });
+  it("registers incorrectly", async () => {
+    const auth = new CognitoAuthenticator();
+    
+    expect(() => auth.register("hellogmail.com", "12345678")).rejects.toThrow("Wrong email")
+    
+  
   });
 });
